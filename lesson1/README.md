@@ -259,5 +259,6 @@ RxJS 的前期铺垫工作就完成了，下一章我们就开始围绕`Behavior
 #### brass 状态管理器
 
 按本系列文章思路实现的响应式状态管理器：
+
 [brass](https://github.com/jaqen404/brass)
 [vue-brass](https://github.com/jaqen404/vue-brass)
