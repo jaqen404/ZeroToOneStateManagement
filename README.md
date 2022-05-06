@@ -71,9 +71,8 @@ Store 模式是一种相对简单的状态管理模式，一般有以下约定�
 
 按本系列文章思路实现的响应式状态管理器：
 
-[brass](https://github.com/jaqen404/brass)
-
-[vue-brass](https://github.com/jaqen404/vue-brass)
+-   [brass](https://github.com/jaqen404/brass)
+-   [vue-brass](https://github.com/jaqen404/vue-brass)
 
 参考：
 

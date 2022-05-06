@@ -1,3 +1,7 @@
+---
+theme: juejin
+---
+
 本章知识点：
 
 1. 什么是 [Observable](https://rxjs.dev/guide/observable)
@@ -26,17 +30,17 @@ const playboy$ = new Observable();
 
 ```js
 const playboy$ = new Observable((subscriber) => {
-    // 发送 花花公子第一期
-    subscriber.next("花花公子第一期");
-    // 发送 花花公子第二期
-    subscriber.next("花花公子第二期");
+    // 发送 武侠第一期
+    subscriber.next("武侠第一期");
+    // 发送 武侠第二期
+    subscriber.next("武侠第二期");
 });
 ```
 
 此时生产流制定出来了，但实际上什么也不会发生，因为并没有人订阅我们的书。要生产流启动，需要有消费者来订阅。订阅的方式就是`subscribe`。
 
 ```js
-// 小明订阅了花花公子杂志
+// 小明订阅了武侠杂志
 playboy$.subscribe({
     next(x) {
         console.log("小明收到" + x);
@@ -47,8 +51,8 @@ playboy$.subscribe({
 控制台会输出：
 
 ```
-小明收到花花公子第一期
-小明收到花花公子第二期
+小明收到武侠第一期
+小明收到武侠第二期
 ```
 
 `注意：A.subcribe(B)，是 B 订阅了 A。`这点一定要理解记住。
@@ -57,14 +61,14 @@ playboy$.subscribe({
 
 ```js
 const playboy$ = new Observable((subscriber) => {
-    // 发送 花花公子第一期
-    subscriber.next("花花公子第一期");
+    // 发送 武侠第一期
+    subscriber.next("武侠第一期");
     // 可以喝了，确认收货
     subscriber.complete();
-    // 花花公子第二期，不会发送，因为已经结束
-    subscriber.next("花花公子第二期");
+    // 武侠第二期，不会发送，因为已经结束
+    subscriber.next("武侠第二期");
 });
-// 小明订阅了花花公子杂志
+// 小明订阅了武侠杂志
 playboy$.subscribe({
     next(x) {
         console.log("小明收到" + x);
@@ -73,25 +77,24 @@ playboy$.subscribe({
         console.log("停产");
     },
 });
-```
 
-```
-小明收到花花公子第一期
-停产
+// logs:
+// 小明收到武侠第一期
+// 停产
 ```
 
 如果你报出错误，后面的东西也都不会发送了。
 
 ```js
 const playboy$ = new Observable((subscriber) => {
-    // 发送 花花公子第一期
-    subscriber.next("花花公子第一期");
+    // 发送 武侠第一期
+    subscriber.next("武侠第一期");
     // 报错，后面杂志都不会发送
     subscriber.error("有内鬼终止交易");
-    // 花花公子第二期，不会发送，因为已经结束
-    subscriber.next("花花公子第二期");
+    // 武侠第二期，不会发送，因为已经结束
+    subscriber.next("武侠第二期");
 });
-// 小明订阅了花花公子杂志
+// 小明订阅了武侠杂志
 playboy$.subscribe({
     next(x) {
         console.log("小明收到" + x);
@@ -100,11 +103,10 @@ playboy$.subscribe({
         console.error("警告：" + err);
     },
 });
-```
 
-```
-小明收到花花公子第一期
-警告：有内鬼终止交易
+// logs:
+// 小明收到花花公子第一期
+// 警告：有内鬼终止交易
 ```
 
 好了，以上就是 RxJS 最核心的内容了。围绕这个出版社，可以`玩出花来`，这出版社里可以同步生产，还可以异步生产，可以合并生产线，还可以控制生产节奏。丰富的操作符[Operators](https://rxjs.dev/guide/operators)后面会慢慢一起学习。
@@ -136,15 +138,14 @@ businessman$.subscribe({
 我们发送两本杂志试试：
 
 ```js
-businessman$.next("少妇白洁");
-businessman$.next("金鳞岂是池中物");
-```
+businessman$.next("寻秦记");
+businessman$.next("射雕英雄传");
 
-```
-小明收到少妇白洁
-小刚收到少妇白洁
-小明收到金鳞岂是池中物
-小刚收到金鳞岂是池中物
+// logs:
+// 小明收到寻秦记
+// 小刚收到寻秦记
+// 小明收到射雕英雄传
+// 小刚收到射雕英雄传
 ```
 
 大家都收到了名著，皆大欢喜。
@@ -152,20 +153,19 @@ businessman$.next("金鳞岂是池中物");
 
 ```js
 // 一个出版社
-const playboy$ = from(["少妇白洁", "金鳞岂是池中物"]);
+const playboy$ = from(["寻秦记", "射雕英雄传"]);
 // 来了一个中间商
 const businessman$ = new Subject();
-// 中间商订阅了花花公子
+// 中间商订阅了武侠
 playboy$.subscribe(businessman$);
 // 小明订阅了中间商
 businessman$.subscribe({
     next: (v) => console.log("小明收到" + v),
 });
-```
 
-```
-小明收到少妇白洁
-小明收到金鳞岂是池中物
+// logs:
+// 小明收到寻秦记
+// 小明收到射雕英雄传
 ```
 
 好的，我们现在遇到了我们的第一个操作符[from](https://rxjs.dev/api/index/function/from)。from 可以将数组、promise 或迭代器转换成 observable。
@@ -177,15 +177,15 @@ businessman$.subscribe({
 因为：
 
 ```js
-const playboy$ = from(["少妇白洁", "金鳞岂是池中物"]);
+const playboy$ = from(["寻秦记", "射雕英雄传"]);
 ```
 
 就相当于：
 
 ```js
 const playboy$ = new Observable((subscriber) => {
-    subscriber.next("少妇白洁");
-    subscriber.next("金鳞岂是池中物");
+    subscriber.next("寻秦记");
+    subscriber.next("射雕英雄传");
 });
 ```
 
@@ -196,17 +196,16 @@ const playboy$ = new Observable((subscriber) => {
 ```js
 const businessman$ = new Subject();
 // 这个在subscrib之前，所以小明收不到
-businessman$.next("少妇白洁");
-// 此时小明订阅，他错过了少妇白洁
+businessman$.next("寻秦记");
+// 此时小明订阅，他错过了寻秦记
 businessman$.subscribe({
     next: (v) => console.log("小明收到" + v),
 });
-// 只会发金鳞岂是池中物
-businessman.next("金鳞岂是池中物");
-```
+// 只会发 射雕英雄传
+businessman.next("射雕英雄传");
 
-```
-小明收到金鳞岂是池中物
+// logs:
+// 小明收到射雕英雄传
 ```
 
 Subject 本质还是一个 Observable， 但它既可以订阅，也可以发送，更加的灵活，更加多的适用场景。
@@ -221,27 +220,26 @@ Subject 本质还是一个 Observable， 但它既可以订阅，也可以发送
 
 ```js
 // BehaviorSubject 必须有初始值
-// 中间商手中第一期（初始值）：少妇白洁
-const businessman$ = new BehaviorSubject("少妇白洁");
+// 中间商手中第一期（初始值）：寻秦记
+const businessman$ = new BehaviorSubject("寻秦记");
 // 小明订阅了
 businessman$.subscribe({
     next: (v) => console.log("小明收到" + v),
 });
-// 中间商第二期：花花公子周年版
-businessman$.next("花花公子周年版");
-// 中间商第三期：金鳞岂是池中物
-businessman$.next("金鳞岂是池中物");
+// 中间商第二期：武侠周年版
+businessman$.next("武侠周年版");
+// 中间商第三期：射雕英雄传
+businessman$.next("射雕英雄传");
 // 小刚订阅了，只会收到最新的一期
 businessman$.subscribe({
     next: (v) => console.log("小刚收到" + v),
 });
-```
 
-```
-小明收到少妇白洁
-小明收到花花公子周年版
-小明收到金鳞岂是池中物
-小刚收到金鳞岂是池中物
+// logs:
+// 小明收到寻秦记
+// 小明收到武侠周年版
+// 小明收到射雕英雄传
+// 小刚收到射雕英雄传
 ```
 
 只要我订阅了，就总能接收到最新的数据，实时更新。这是不是超级契合我们前端的状态管理器，还是响应式的。
@@ -252,13 +250,9 @@ RxJS 的前期铺垫工作就完成了，下一章我们就开始围绕`Behavior
 
 ## 其它
 
-#### 文章和源码
-
-[本系列 github 地址](https://github.com/jaqen404/ZeroToOneStateManagement)
-
 #### brass 状态管理器
 
 按本系列文章思路实现的响应式状态管理器：
 
-[brass](https://github.com/jaqen404/brass)
-[vue-brass](https://github.com/jaqen404/vue-brass)
+-   [brass](https://github.com/jaqen404/brass)
+-   [vue-brass](https://github.com/jaqen404/vue-brass)
